@@ -11,7 +11,7 @@ public class VotingApplication {
         //SpringApplication.run(VotingApplication.class, args);
 
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("com.example.Voting");
-        while (true) {
+        while(true) {
             System.out.println("WELCOME");
 
             AuthorityAccess authorityAccess = (AuthorityAccess) context.getBean("authority");
@@ -55,7 +55,7 @@ public class VotingApplication {
                     user.setPoliticalParty(party);//political party inject into the user
                     UserList userList = (UserList) context.getBean("userList");
                     userList.addUser(user);
-                    authorityAccess.setUserList(userList);
+                    //authorityAccess.setUserList(userList);
                     System.out.println("Thank You");
                     break;
                 }
