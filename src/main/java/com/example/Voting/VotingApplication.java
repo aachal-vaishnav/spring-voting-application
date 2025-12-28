@@ -7,22 +7,25 @@ import java.util.Scanner;
 //@SpringBootApplication
 public class VotingApplication {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
         //SpringApplication.run(VotingApplication.class, args);
 
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("com.example.Voting");
-        while(true) {
+        Scanner input = new Scanner(System.in); // create scanner only once
+
+        while (true) {
             System.out.println("WELCOME");
 
             AuthorityAccess authorityAccess = (AuthorityAccess) context.getBean("authority");
-            Scanner input = new Scanner(System.in);
             System.out.println("""
                     Choose from below
                     1.Want to Vote
                     2.See All Votes(ADMIN)
+                    3.Exit
                     """);
             int userInput = input.nextInt();
             String beanID = "";
+
             switch (userInput) {
                 case 1: {
                     System.out.println("Enter Your Username");
@@ -38,34 +41,35 @@ public class VotingApplication {
                             """);
                     int partyInput = input.nextInt();
                     switch (partyInput) {
-                        case 1: {
-                            beanID = "democratic";
-                            break;
-                        }
-                        case 2: {
-                            beanID = "republic";
-                            break;
-                        }
-                        case 3: {
-                            beanID = "independent";
-                            break;
-                        }
+                        case 1 -> beanID = "democratic";
+                        case 2 -> beanID = "republic";
+                        case 3 -> beanID = "independent";
+                        default -> System.out.println("Invalid choice");
                     }
-                    PoliticalParty party = (PoliticalParty) context.getBean(beanID);
-                    user.setPoliticalParty(party);//political party inject into the user
-                    UserList userList = (UserList) context.getBean("userList");
-                    userList.addUser(user);
-                    //authorityAccess.setUserList(userList);
-                    System.out.println("Thank You");
+                    if (!beanID.isEmpty()) {
+                        PoliticalParty party = (PoliticalParty) context.getBean(beanID);
+                        user.setPoliticalParty(party);//political party inject into the user
+                        UserList userList = (UserList) context.getBean("userList");
+                        userList.addUser(user);
+                        //authorityAccess.setUserList(userList);
+                        System.out.println("Thank You");
+                    }
                     break;
                 }
                 case 2: {
-                    authorityAccess.getUserList().getUserList().
-                            forEach(item -> System.out.println(item.getUserName() + " is voted for " + item.getParty().getPartyName()));
+                    authorityAccess.getUserList().getUserList()
+                            .forEach(item -> System.out.println(item.getUserName() + " is voted for " + item.getParty().getPartyName()));
                     break;
                 }
+                case 3: {
+                    System.out.println("Voting has been closed");
+                    input.close();
+                    context.close();
+                    return; // exit the program
+                }
+                default:
+                    System.out.println("Invalid input, try again.");
             }
         }
     }
-
 }
