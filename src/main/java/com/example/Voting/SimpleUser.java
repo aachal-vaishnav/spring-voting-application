@@ -1,9 +1,11 @@
 package com.example.Voting;
 
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component("user")
+@Scope("prototype")
 public class SimpleUser implements User{
 
     private String userName ;
